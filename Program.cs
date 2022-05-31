@@ -15,22 +15,21 @@ namespace AdmCallNamespace
                     List<string> execCMD = new List<string>();
                     using (StreamReader sr = new StreamReader("commandlist.txt"))
                     {
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
+                        string cmd;
+                        while ((cmd = sr.ReadLine()) != null)
                         {
-                            execCMD.Add(line);
+                            Process myProcess = new Process();
+                            myProcess.StartInfo.UseShellExecute = true;
+                            myProcess.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+                            myProcess.StartInfo.FileName = cmd;
+                            myProcess.StartInfo.Verb = "runas";
+                            sw.Write("Executing: " + cmd + "\t");
+                            myProcess.Start();
+                            myProcess.WaitForExit();
+                            sw.WriteLine("ExitCode: " + myProcess.ExitCode);
                         }
+                        execCMD = null;
                     }
-                    foreach (string cmd in execCMD)
-                    {
-                        Process myProcess = new Process();
-                        myProcess.StartInfo.UseShellExecute = true;
-                        myProcess.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-                        myProcess.StartInfo.FileName = cmd;
-                        myProcess.StartInfo.Verb = "runas";
-                        myProcess.Start();
-                    }
-                    execCMD = null;
                 }
                 catch (Exception e)
                 { //Exception;
